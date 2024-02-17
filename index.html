@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Game of Thrones World Map</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #A0CEE5, #42A1B3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .location {
+            fill: rgba(3, 68, 30, 0.751);
+            cursor: pointer;
+        }
+
+        .popup {
+            position: absolute;
+            display: none;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            z-index: 10;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .popup h2 {
+            margin: 0;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .popup p {
+            color: #666;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        svg {
+            border: 1px solid #ccc;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+    </style>
+</head>
+
+<body>
+
+    <svg width="450" height="1250" viewBox="0 0 450 1250">
+        <image href='https://i.pinimg.com/originals/bb/2a/df/bb2adfb32a495a5b6e5334f35f2fb0f6.jpg' width="450"
+            height="1250" />
+    </svg>
+
+    <div id="popup" class="popup"></div>
+
+    <script>
+        const svg = d3.select("svg");
+        const popup = d3.select("#popup");
+
+        const locations = [
+            { name: "Winterfell", description: "The ancestral home of House Stark.", x: 225, y: 442 },
+            { name: "King's Landing", description: "The capital of the Seven Kingdoms.", x: 300, y: 920 },
+            { name: "The Eyrie", description: "The seat of House Arryn.", x: 330, y: 740 },
+            { name: "Casterly Rock", description: "The ancestral stronghold of House Lannister.", x: 75, y: 880 },
+            { name: "Riverrun", description: "The seat of House Tully.", x: 190, y: 800 },
+            { name: "Storm's End", description: "The seat of House Baratheon.", x: 365, y: 1020 },
+            { name: "Sunspear", description: "The seat of House Martell.", x: 400, y: 1200 },
+            { name: "Highgarden", description: "The seat of House Tyrell.", x: 130, y: 1050 },
+            { name: "Dragonstone", description: "The ancestral seat of House Targaryen.", x: 385, y: 860 },
+            { name: "Pyke", description: "The seat of House Greyjoy.", x: 85, y: 760 },
+            { name: "Castle Black", description: "Nights Watch", x: 300, y: 275 },
+        ];
+
+        // Function to handle zooming into a location
+        function zoomIntoLocation(x, y) {
+            const newViewBoxX = x - 200;
+            const newViewBoxY = y - 350; // Adjust for better centering
+            const newViewBoxWidth = 300;
+            const newViewBoxHeight = 600; // Adjusted for aspect ratio
+
+            svg.attr('viewBox', `${newViewBoxX} ${newViewBoxY} ${newViewBoxWidth} ${newViewBoxHeight}`);
+        }
+
+        svg.selectAll("circle.location")
+            .data(locations)
+            .enter().append("circle")
+            .attr("class", "location")
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y)
+            .attr("r", 10)
+            .on("click", (event, d) => {
+                popup.style("display", "block")
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY + 10) + "px")
+                    .html(`<h2>${d.name}</h2><p>${d.description}</p>`);
+
+                zoomIntoLocation(d.x, d.y);
+            });
+    </script>
+
+</body>
+
+</html>
